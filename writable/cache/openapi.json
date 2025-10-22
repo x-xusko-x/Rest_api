@@ -1,0 +1,1323 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Rise CRM REST API",
+        "description": "Comprehensive REST API for Rise CRM with full CRUD operations on all major resources",
+        "contact": {
+            "name": "API Support",
+            "email": "api@risecrm.com"
+        },
+        "license": {
+            "name": "Rise CRM License",
+            "url": "https:\/\/codecanyon.net\/licenses\/standard"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "\/api\/v1",
+            "description": "API V1 Server"
+        }
+    ],
+    "paths": {
+        "\/users": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "List all users",
+                "description": "Retrieve a paginated list of users with optional filtering",
+                "operationId": "listUsers",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Number of items to return (max: 100)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 50,
+                            "maximum": 100,
+                            "minimum": 1
+                        }
+                    },
+                    {
+                        "name": "offset",
+                        "in": "query",
+                        "description": "Number of items to skip",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 0,
+                            "minimum": 0
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number (alternative to offset)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Search term",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "user_type",
+                        "in": "query",
+                        "description": "Filter by user type",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "staff",
+                                "client"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "Filter by status",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "active",
+                                "inactive"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "client_id",
+                        "in": "query",
+                        "description": "Filter by client ID (for client users)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/UserListResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#\/components\/responses\/Unauthorized"
+                    },
+                    "403": {
+                        "$ref": "#\/components\/responses\/Forbidden"
+                    },
+                    "429": {
+                        "$ref": "#\/components\/responses\/TooManyRequests"
+                    },
+                    "500": {
+                        "$ref": "#\/components\/responses\/InternalServerError"
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": [],
+                        "ApiSecretAuth": []
+                    },
+                    {
+                        "BearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Announcement": {
+                "title": "Announcement",
+                "description": "Announcement resource model",
+                "required": [
+                    "id",
+                    "title"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "Announcement Model Schema",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "title": {
+                        "type": "string",
+                        "example": "Important Announcement"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "This is an important announcement for all staff.",
+                        "nullable": true
+                    },
+                    "start_date": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2025-10-15",
+                        "nullable": true
+                    },
+                    "end_date": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2025-10-20",
+                        "nullable": true
+                    },
+                    "share_with": {
+                        "description": "Comma-separated list of user IDs or 'all'",
+                        "type": "string",
+                        "example": "all",
+                        "nullable": true
+                    },
+                    "created_by": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "created_by_user": {
+                        "type": "string",
+                        "example": "John Doe",
+                        "nullable": true
+                    },
+                    "created_by_avatar": {
+                        "type": "string",
+                        "example": "avatar.jpg",
+                        "nullable": true
+                    },
+                    "created_date": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-10-15T10:30:00+00:00",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "CreateAnnouncementRequest": {
+                "title": "Create Announcement Request",
+                "description": "Request body for creating a new announcement",
+                "required": [
+                    "title"
+                ],
+                "properties": {
+                    "title": {
+                        "description": "Announcement title",
+                        "type": "string",
+                        "example": "Important Announcement"
+                    },
+                    "description": {
+                        "description": "Announcement description\/content",
+                        "type": "string",
+                        "example": "This is an important announcement for all staff."
+                    },
+                    "start_date": {
+                        "description": "Start date (YYYY-MM-DD)",
+                        "type": "string",
+                        "format": "date",
+                        "example": "2025-10-15"
+                    },
+                    "end_date": {
+                        "description": "End date (YYYY-MM-DD)",
+                        "type": "string",
+                        "format": "date",
+                        "example": "2025-10-20"
+                    },
+                    "share_with": {
+                        "description": "Comma-separated user IDs or 'all'",
+                        "type": "string",
+                        "example": "all"
+                    }
+                },
+                "type": "object"
+            },
+            "UpdateAnnouncementRequest": {
+                "title": "Update Announcement Request",
+                "description": "Request body for updating an announcement (all fields optional)",
+                "properties": {
+                    "title": {
+                        "description": "Update Announcement Request Schema",
+                        "type": "string",
+                        "example": "Updated Announcement Title"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Updated announcement content"
+                    },
+                    "start_date": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2025-10-16"
+                    },
+                    "end_date": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2025-10-21"
+                    },
+                    "share_with": {
+                        "type": "string",
+                        "example": "1,2,3"
+                    }
+                },
+                "type": "object"
+            },
+            "AnnouncementResponse": {
+                "title": "Announcement Response",
+                "description": "Single announcement response",
+                "required": [
+                    "success",
+                    "data",
+                    "meta"
+                ],
+                "properties": {
+                    "success": {
+                        "description": "Announcement Response Schema",
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "data": {
+                        "properties": {
+                            "announcement": {
+                                "$ref": "#\/components\/schemas\/Announcement"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "meta": {
+                        "$ref": "#\/components\/schemas\/ResponseMeta"
+                    }
+                },
+                "type": "object"
+            },
+            "AnnouncementListResponse": {
+                "title": "Announcement List Response",
+                "description": "List of announcements with pagination",
+                "required": [
+                    "success",
+                    "data",
+                    "meta"
+                ],
+                "properties": {
+                    "success": {
+                        "description": "Announcement List Response Schema",
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "data": {
+                        "properties": {
+                            "announcements": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#\/components\/schemas\/Announcement"
+                                }
+                            },
+                            "pagination": {
+                                "$ref": "#\/components\/schemas\/PaginationMeta"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "meta": {
+                        "$ref": "#\/components\/schemas\/ResponseMeta"
+                    }
+                },
+                "type": "object"
+            },
+            "Client": {
+                "title": "Client",
+                "description": "Client or Lead resource model",
+                "required": [
+                    "id",
+                    "company_name"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "Client Model Schema",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "company_name": {
+                        "type": "string",
+                        "example": "Acme Corporation"
+                    },
+                    "is_lead": {
+                        "description": "1 if lead, 0 if client",
+                        "type": "integer",
+                        "enum": [
+                            0,
+                            1
+                        ],
+                        "example": 0
+                    },
+                    "type": {
+                        "description": "person or organization",
+                        "type": "string",
+                        "example": "organization",
+                        "nullable": true
+                    },
+                    "website": {
+                        "type": "string",
+                        "example": "https:\/\/acme.com",
+                        "nullable": true
+                    },
+                    "phone": {
+                        "type": "string",
+                        "example": "+1234567890",
+                        "nullable": true
+                    },
+                    "address": {
+                        "type": "string",
+                        "example": "123 Business St",
+                        "nullable": true
+                    },
+                    "city": {
+                        "type": "string",
+                        "example": "New York",
+                        "nullable": true
+                    },
+                    "state": {
+                        "type": "string",
+                        "example": "NY",
+                        "nullable": true
+                    },
+                    "zip": {
+                        "type": "string",
+                        "example": "10001",
+                        "nullable": true
+                    },
+                    "country": {
+                        "type": "string",
+                        "example": "USA",
+                        "nullable": true
+                    },
+                    "vat_number": {
+                        "type": "string",
+                        "example": "VAT123456",
+                        "nullable": true
+                    },
+                    "gst_number": {
+                        "type": "string",
+                        "example": "GST789012",
+                        "nullable": true
+                    },
+                    "currency": {
+                        "type": "string",
+                        "example": "USD",
+                        "nullable": true
+                    },
+                    "currency_symbol": {
+                        "type": "string",
+                        "example": "$",
+                        "nullable": true
+                    },
+                    "owner_id": {
+                        "description": "User ID who owns this client",
+                        "type": "integer",
+                        "example": 1,
+                        "nullable": true
+                    },
+                    "group_id": {
+                        "description": "Client group ID",
+                        "type": "integer",
+                        "example": 1,
+                        "nullable": true
+                    },
+                    "source": {
+                        "description": "Lead source",
+                        "type": "string",
+                        "example": "website",
+                        "nullable": true
+                    },
+                    "status": {
+                        "description": "Lead status",
+                        "type": "string",
+                        "example": "open",
+                        "nullable": true
+                    },
+                    "labels": {
+                        "description": "Comma-separated label IDs",
+                        "type": "string",
+                        "example": "1,2,3",
+                        "nullable": true
+                    },
+                    "created_by": {
+                        "type": "integer",
+                        "example": 1,
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-10-15T10:30:00+00:00",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "CreateClientRequest": {
+                "title": "Create Client Request",
+                "description": "Request body for creating a new client or lead",
+                "required": [
+                    "company_name"
+                ],
+                "properties": {
+                    "company_name": {
+                        "description": "Company or person name",
+                        "type": "string",
+                        "example": "Acme Corporation"
+                    },
+                    "is_lead": {
+                        "description": "1 to create as lead, 0 as client",
+                        "type": "integer",
+                        "enum": [
+                            0,
+                            1
+                        ],
+                        "example": 0
+                    },
+                    "type": {
+                        "description": "Client type",
+                        "type": "string",
+                        "enum": [
+                            "person",
+                            "organization"
+                        ],
+                        "example": "organization"
+                    },
+                    "website": {
+                        "description": "Company website",
+                        "type": "string",
+                        "format": "uri",
+                        "example": "https:\/\/acme.com"
+                    },
+                    "phone": {
+                        "description": "Phone number",
+                        "type": "string",
+                        "example": "+1234567890"
+                    },
+                    "address": {
+                        "description": "Street address",
+                        "type": "string",
+                        "example": "123 Business St"
+                    },
+                    "city": {
+                        "description": "City",
+                        "type": "string",
+                        "example": "New York"
+                    },
+                    "state": {
+                        "description": "State\/Province",
+                        "type": "string",
+                        "example": "NY"
+                    },
+                    "zip": {
+                        "description": "ZIP\/Postal code",
+                        "type": "string",
+                        "example": "10001"
+                    },
+                    "country": {
+                        "description": "Country",
+                        "type": "string",
+                        "example": "USA"
+                    },
+                    "vat_number": {
+                        "description": "VAT number",
+                        "type": "string",
+                        "example": "VAT123456"
+                    },
+                    "gst_number": {
+                        "description": "GST number",
+                        "type": "string",
+                        "example": "GST789012"
+                    },
+                    "currency": {
+                        "description": "Currency code (USD, EUR, etc.)",
+                        "type": "string",
+                        "example": "USD"
+                    },
+                    "owner_id": {
+                        "description": "User ID who owns this client",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "group_id": {
+                        "description": "Client group ID",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "source": {
+                        "description": "Lead source",
+                        "type": "string",
+                        "example": "website"
+                    },
+                    "status": {
+                        "description": "Lead status",
+                        "type": "string",
+                        "example": "open"
+                    },
+                    "labels": {
+                        "description": "Comma-separated label IDs",
+                        "type": "string",
+                        "example": "1,2,3"
+                    }
+                },
+                "type": "object"
+            },
+            "UpdateClientRequest": {
+                "title": "Update Client Request",
+                "description": "Request body for updating a client or lead (all fields optional)",
+                "properties": {
+                    "company_name": {
+                        "description": "Update Client Request Schema",
+                        "type": "string",
+                        "example": "Updated Company Name"
+                    },
+                    "type": {
+                        "type": "string",
+                        "enum": [
+                            "person",
+                            "organization"
+                        ],
+                        "example": "organization"
+                    },
+                    "website": {
+                        "type": "string",
+                        "format": "uri",
+                        "example": "https:\/\/updated-acme.com"
+                    },
+                    "phone": {
+                        "type": "string",
+                        "example": "+1234567890"
+                    },
+                    "address": {
+                        "type": "string",
+                        "example": "456 New Address St"
+                    },
+                    "city": {
+                        "type": "string",
+                        "example": "Los Angeles"
+                    },
+                    "state": {
+                        "type": "string",
+                        "example": "CA"
+                    },
+                    "zip": {
+                        "type": "string",
+                        "example": "90001"
+                    },
+                    "country": {
+                        "type": "string",
+                        "example": "USA"
+                    },
+                    "vat_number": {
+                        "type": "string",
+                        "example": "VAT999999"
+                    },
+                    "gst_number": {
+                        "type": "string",
+                        "example": "GST888888"
+                    },
+                    "currency": {
+                        "type": "string",
+                        "example": "EUR"
+                    },
+                    "owner_id": {
+                        "type": "integer",
+                        "example": 2
+                    },
+                    "group_id": {
+                        "type": "integer",
+                        "example": 2
+                    },
+                    "source": {
+                        "type": "string",
+                        "example": "referral"
+                    },
+                    "status": {
+                        "type": "string",
+                        "example": "closed"
+                    },
+                    "labels": {
+                        "type": "string",
+                        "example": "4,5,6"
+                    }
+                },
+                "type": "object"
+            },
+            "ClientResponse": {
+                "title": "Client Response",
+                "description": "Single client response",
+                "required": [
+                    "success",
+                    "data",
+                    "meta"
+                ],
+                "properties": {
+                    "success": {
+                        "description": "Client Response Schema",
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "data": {
+                        "properties": {
+                            "client": {
+                                "$ref": "#\/components\/schemas\/Client"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "meta": {
+                        "$ref": "#\/components\/schemas\/ResponseMeta"
+                    }
+                },
+                "type": "object"
+            },
+            "ClientListResponse": {
+                "title": "Client List Response",
+                "description": "List of clients with pagination",
+                "required": [
+                    "success",
+                    "data",
+                    "meta"
+                ],
+                "properties": {
+                    "success": {
+                        "description": "Client List Response Schema",
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "data": {
+                        "properties": {
+                            "clients": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#\/components\/schemas\/Client"
+                                }
+                            },
+                            "pagination": {
+                                "$ref": "#\/components\/schemas\/PaginationMeta"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "meta": {
+                        "$ref": "#\/components\/schemas\/ResponseMeta"
+                    }
+                },
+                "type": "object"
+            },
+            "ResponseMeta": {
+                "title": "Response Metadata",
+                "description": "Standard metadata included in all API responses",
+                "required": [
+                    "timestamp",
+                    "response_time",
+                    "version"
+                ],
+                "properties": {
+                    "timestamp": {
+                        "description": "ISO 8601 timestamp of response",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-10-15T12:34:56+00:00"
+                    },
+                    "response_time": {
+                        "description": "Response time in milliseconds",
+                        "type": "string",
+                        "example": "45.23ms"
+                    },
+                    "version": {
+                        "description": "API version",
+                        "type": "string",
+                        "example": "1.0"
+                    }
+                },
+                "type": "object"
+            },
+            "PaginationMeta": {
+                "title": "Pagination Metadata",
+                "description": "Pagination information for list responses",
+                "required": [
+                    "total",
+                    "count",
+                    "per_page",
+                    "current_page",
+                    "total_pages",
+                    "offset",
+                    "has_more"
+                ],
+                "properties": {
+                    "total": {
+                        "description": "Total number of items available",
+                        "type": "integer",
+                        "example": 150
+                    },
+                    "count": {
+                        "description": "Number of items in current response",
+                        "type": "integer",
+                        "example": 50
+                    },
+                    "per_page": {
+                        "description": "Items per page",
+                        "type": "integer",
+                        "example": 50
+                    },
+                    "current_page": {
+                        "description": "Current page number",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "total_pages": {
+                        "description": "Total number of pages",
+                        "type": "integer",
+                        "example": 3
+                    },
+                    "offset": {
+                        "description": "Current offset",
+                        "type": "integer",
+                        "example": 0
+                    },
+                    "has_more": {
+                        "description": "Whether more pages are available",
+                        "type": "boolean",
+                        "example": true
+                    }
+                },
+                "type": "object"
+            },
+            "ErrorResponse": {
+                "title": "Error Response",
+                "description": "Standard error response structure",
+                "required": [
+                    "success",
+                    "error",
+                    "meta"
+                ],
+                "properties": {
+                    "success": {
+                        "description": "Get Error Response schema",
+                        "type": "boolean",
+                        "example": false
+                    },
+                    "error": {
+                        "properties": {
+                            "code": {
+                                "type": "integer",
+                                "example": 400
+                            },
+                            "message": {
+                                "type": "string",
+                                "example": "Validation failed"
+                            },
+                            "details": {
+                                "type": "object",
+                                "example": {
+                                    "field1": "Field1 is required"
+                                }
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "meta": {
+                        "$ref": "#\/components\/schemas\/ResponseMeta"
+                    }
+                },
+                "type": "object"
+            },
+            "SuccessResponse": {
+                "title": "Success Response",
+                "description": "Standard success response structure",
+                "required": [
+                    "success",
+                    "data",
+                    "meta"
+                ],
+                "properties": {
+                    "success": {
+                        "description": "Get Success Response schema (generic)",
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "data": {
+                        "description": "Response data",
+                        "type": "object"
+                    },
+                    "meta": {
+                        "$ref": "#\/components\/schemas\/ResponseMeta"
+                    }
+                },
+                "type": "object"
+            },
+            "ValidationError": {
+                "title": "Validation Error",
+                "description": "Validation error details",
+                "required": [
+                    "property",
+                    "message"
+                ],
+                "properties": {
+                    "property": {
+                        "description": "Field name that failed validation",
+                        "type": "string",
+                        "example": "email"
+                    },
+                    "message": {
+                        "description": "Validation error message",
+                        "type": "string",
+                        "example": "Email is required"
+                    },
+                    "constraint": {
+                        "description": "Validation constraint that failed",
+                        "type": "string",
+                        "example": "required"
+                    }
+                },
+                "type": "object"
+            },
+            "User": {
+                "title": "User",
+                "description": "User resource model",
+                "required": [
+                    "id",
+                    "first_name",
+                    "last_name",
+                    "email",
+                    "user_type"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "User Model Schema",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "first_name": {
+                        "type": "string",
+                        "example": "John"
+                    },
+                    "last_name": {
+                        "type": "string",
+                        "example": "Doe"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "john.doe@example.com"
+                    },
+                    "user_type": {
+                        "type": "string",
+                        "enum": [
+                            "staff",
+                            "client"
+                        ],
+                        "example": "staff"
+                    },
+                    "job_title": {
+                        "type": "string",
+                        "example": "Developer",
+                        "nullable": true
+                    },
+                    "phone": {
+                        "type": "string",
+                        "example": "+1234567890",
+                        "nullable": true
+                    },
+                    "skype": {
+                        "type": "string",
+                        "example": "john.doe",
+                        "nullable": true
+                    },
+                    "gender": {
+                        "type": "string",
+                        "enum": [
+                            "male",
+                            "female",
+                            "other"
+                        ],
+                        "example": "male",
+                        "nullable": true
+                    },
+                    "address": {
+                        "type": "string",
+                        "example": "123 Main St",
+                        "nullable": true
+                    },
+                    "alternative_address": {
+                        "type": "string",
+                        "example": "456 Oak Ave",
+                        "nullable": true
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "active",
+                            "inactive"
+                        ],
+                        "example": "active"
+                    },
+                    "role_id": {
+                        "type": "integer",
+                        "example": 1,
+                        "nullable": true
+                    },
+                    "is_admin": {
+                        "type": "integer",
+                        "enum": [
+                            0,
+                            1
+                        ],
+                        "example": 0
+                    },
+                    "client_id": {
+                        "description": "Client ID for client type users",
+                        "type": "integer",
+                        "example": null,
+                        "nullable": true
+                    },
+                    "note": {
+                        "type": "string",
+                        "example": "Important user note",
+                        "nullable": true
+                    },
+                    "disable_login": {
+                        "type": "integer",
+                        "enum": [
+                            0,
+                            1
+                        ],
+                        "example": 0,
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-10-15T10:30:00+00:00"
+                    }
+                },
+                "type": "object"
+            },
+            "CreateUserRequest": {
+                "title": "Create User Request",
+                "description": "Request body for creating a new user",
+                "required": [
+                    "first_name",
+                    "last_name",
+                    "email",
+                    "user_type"
+                ],
+                "properties": {
+                    "first_name": {
+                        "description": "User's first name",
+                        "type": "string",
+                        "example": "John"
+                    },
+                    "last_name": {
+                        "description": "User's last name",
+                        "type": "string",
+                        "example": "Doe"
+                    },
+                    "email": {
+                        "description": "User's email address",
+                        "type": "string",
+                        "format": "email",
+                        "example": "john.doe@example.com"
+                    },
+                    "user_type": {
+                        "description": "User type",
+                        "type": "string",
+                        "enum": [
+                            "staff",
+                            "client"
+                        ],
+                        "example": "staff"
+                    },
+                    "password": {
+                        "description": "User's password (optional)",
+                        "type": "string",
+                        "format": "password",
+                        "example": "SecurePass123!"
+                    },
+                    "job_title": {
+                        "description": "User's job title",
+                        "type": "string",
+                        "example": "Developer"
+                    },
+                    "phone": {
+                        "description": "Phone number",
+                        "type": "string",
+                        "example": "+1234567890"
+                    },
+                    "skype": {
+                        "description": "Skype username",
+                        "type": "string",
+                        "example": "john.doe"
+                    },
+                    "gender": {
+                        "description": "Gender",
+                        "type": "string",
+                        "enum": [
+                            "male",
+                            "female",
+                            "other"
+                        ],
+                        "example": "male"
+                    },
+                    "address": {
+                        "description": "Primary address",
+                        "type": "string",
+                        "example": "123 Main St"
+                    },
+                    "alternative_address": {
+                        "description": "Alternative address",
+                        "type": "string",
+                        "example": "456 Oak Ave"
+                    },
+                    "role_id": {
+                        "description": "Role ID (for staff users)",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "is_admin": {
+                        "description": "Whether user is admin",
+                        "type": "boolean",
+                        "example": false
+                    },
+                    "client_id": {
+                        "description": "Client ID (required for client type users)",
+                        "type": "integer",
+                        "example": 5
+                    },
+                    "note": {
+                        "description": "Additional notes",
+                        "type": "string",
+                        "example": "Important user"
+                    }
+                },
+                "type": "object"
+            },
+            "UpdateUserRequest": {
+                "title": "Update User Request",
+                "description": "Request body for updating a user (all fields optional)",
+                "properties": {
+                    "first_name": {
+                        "description": "Update User Request Schema",
+                        "type": "string",
+                        "example": "John"
+                    },
+                    "last_name": {
+                        "type": "string",
+                        "example": "Doe"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "john.doe@example.com"
+                    },
+                    "password": {
+                        "description": "New password (optional)",
+                        "type": "string",
+                        "format": "password",
+                        "example": "NewSecurePass123!"
+                    },
+                    "job_title": {
+                        "type": "string",
+                        "example": "Senior Developer"
+                    },
+                    "phone": {
+                        "type": "string",
+                        "example": "+1234567890"
+                    },
+                    "skype": {
+                        "type": "string",
+                        "example": "john.doe"
+                    },
+                    "gender": {
+                        "type": "string",
+                        "enum": [
+                            "male",
+                            "female",
+                            "other"
+                        ],
+                        "example": "male"
+                    },
+                    "address": {
+                        "type": "string",
+                        "example": "123 Main St"
+                    },
+                    "alternative_address": {
+                        "type": "string",
+                        "example": "456 Oak Ave"
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "active",
+                            "inactive"
+                        ],
+                        "example": "active"
+                    },
+                    "role_id": {
+                        "type": "integer",
+                        "example": 2
+                    },
+                    "is_admin": {
+                        "type": "boolean",
+                        "example": false
+                    },
+                    "note": {
+                        "type": "string",
+                        "example": "Updated note"
+                    },
+                    "disable_login": {
+                        "type": "boolean",
+                        "example": false
+                    }
+                },
+                "type": "object"
+            },
+            "UserResponse": {
+                "title": "User Response",
+                "description": "Single user response",
+                "required": [
+                    "success",
+                    "data",
+                    "meta"
+                ],
+                "properties": {
+                    "success": {
+                        "description": "User Response Schema",
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "data": {
+                        "properties": {
+                            "user": {
+                                "$ref": "#\/components\/schemas\/User"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "meta": {
+                        "$ref": "#\/components\/schemas\/ResponseMeta"
+                    }
+                },
+                "type": "object"
+            },
+            "UserListResponse": {
+                "title": "User List Response",
+                "description": "List of users with pagination",
+                "required": [
+                    "success",
+                    "data",
+                    "meta"
+                ],
+                "properties": {
+                    "success": {
+                        "description": "User List Response Schema",
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "data": {
+                        "properties": {
+                            "users": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#\/components\/schemas\/User"
+                                }
+                            },
+                            "pagination": {
+                                "$ref": "#\/components\/schemas\/PaginationMeta"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "meta": {
+                        "$ref": "#\/components\/schemas\/ResponseMeta"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "responses": {
+            "Unauthorized": {
+                "description": "Unauthorized - Invalid or missing API credentials",
+                "content": {
+                    "application\/json": {
+                        "schema": {
+                            "$ref": "#\/components\/schemas\/ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "Forbidden": {
+                "description": "Forbidden - Insufficient permissions",
+                "content": {
+                    "application\/json": {
+                        "schema": {
+                            "$ref": "#\/components\/schemas\/ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "TooManyRequests": {
+                "description": "Too Many Requests - Rate limit exceeded",
+                "content": {
+                    "application\/json": {
+                        "schema": {
+                            "$ref": "#\/components\/schemas\/ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "InternalServerError": {
+                "description": "Internal Server Error",
+                "content": {
+                    "application\/json": {
+                        "schema": {
+                            "$ref": "#\/components\/schemas\/ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "securitySchemes": {
+            "ApiKeyAuth": {
+                "type": "apiKey",
+                "description": "API Key for authentication",
+                "name": "X-API-Key",
+                "in": "header"
+            },
+            "ApiSecretAuth": {
+                "type": "apiKey",
+                "description": "API Secret for authentication",
+                "name": "X-API-Secret",
+                "in": "header"
+            },
+            "BearerAuth": {
+                "type": "http",
+                "description": "Bearer token authentication (base64 encoded api_key:api_secret)",
+                "bearerFormat": "base64(api_key:api_secret)",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Users",
+            "description": "User management operations"
+        }
+    ]
+}

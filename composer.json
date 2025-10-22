@@ -1,0 +1,24 @@
+{
+    "name": "rest-api/rise-crm-api",
+    "description": "REST API Plugin for Rise CRM with OpenAPI 3.0 Support",
+    "type": "library",
+    "require": {
+        "php": ">=7.4",
+        "zircote/swagger-php": "^4.7",
+        "justinrainbow/json-schema": "^5.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Rest_api\\": "",
+            "Rest_api\\Controllers\\": "Controllers/",
+            "Rest_api\\Models\\": "Models/",
+            "Rest_api\\Libraries\\": "Libraries/",
+            "Rest_api\\Schemas\\": "Schemas/"
+        }
+    },
+    "config": {
+        "vendor-dir": "vendor",
+        "optimize-autoloader": true
+    }
+}
+

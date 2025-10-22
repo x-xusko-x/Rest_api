@@ -1,0 +1,324 @@
+/* REST API Plugin Admin Styles */
+
+/* Dashboard Widgets */
+.dashboard-icon-widget {
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+}
+
+.dashboard-icon-widget:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.dashboard-icon-widget .widget-icon {
+    font-size: 48px;
+    padding: 20px;
+    border-radius: 8px 0 0 8px;
+    display: inline-block;
+    float: left;
+}
+
+.dashboard-icon-widget .widget-icon i {
+    color: white;
+}
+
+.dashboard-icon-widget .widget-details {
+    padding: 20px;
+    margin-left: 88px;
+}
+
+.dashboard-icon-widget .widget-details h1 {
+    margin: 0;
+    font-size: 32px;
+    font-weight: bold;
+    color: #333;
+}
+
+.dashboard-icon-widget .widget-details span {
+    font-size: 14px;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* API Key Display */
+#api-key-value {
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    background-color: #f8f9fa;
+}
+
+.api-key-container {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 5px;
+    border: 1px solid #dee2e6;
+    margin: 10px 0;
+}
+
+.api-key-display {
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    word-break: break-all;
+    background: white;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ced4da;
+}
+
+/* Status Badges */
+.badge {
+    padding: 5px 10px;
+    font-size: 12px;
+    font-weight: 500;
+    border-radius: 4px;
+}
+
+.badge.bg-success {
+    background-color: #28a745 !important;
+}
+
+.badge.bg-danger {
+    background-color: #dc3545 !important;
+}
+
+.badge.bg-warning {
+    background-color: #ffc107 !important;
+    color: #212529;
+}
+
+.badge.bg-info {
+    background-color: #17a2b8 !important;
+}
+
+.badge.bg-primary {
+    background-color: #007bff !important;
+}
+
+.badge.bg-secondary {
+    background-color: #6c757d !important;
+}
+
+/* API Logs Table */
+#api-logs-table .method-badge {
+    display: inline-block;
+    min-width: 60px;
+    text-align: center;
+}
+
+#api-logs-table .status-badge {
+    display: inline-block;
+    min-width: 50px;
+    text-align: center;
+}
+
+/* Filter Section */
+.filter-section {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.filter-section .form-control,
+.filter-section .select2-container {
+    height: 38px;
+}
+
+/* Quick Actions */
+.quick-actions-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.quick-actions-card h4 {
+    color: white;
+    margin-bottom: 15px;
+}
+
+.quick-actions-card .btn {
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+/* API Health Card */
+.api-health-card {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.api-health-card .card-header {
+    background: #007bff;
+    color: white;
+    font-weight: 600;
+}
+
+.api-health-card table td {
+    padding: 12px;
+}
+
+.api-health-card table td:first-child {
+    font-weight: 600;
+    color: #495057;
+}
+
+/* Statistics Cards */
+.stat-card {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    transition: all 0.3s;
+}
+
+.stat-card:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.stat-card .stat-icon {
+    font-size: 36px;
+    color: #007bff;
+    float: left;
+    margin-right: 15px;
+}
+
+.stat-card .stat-value {
+    font-size: 28px;
+    font-weight: bold;
+    color: #333;
+    margin: 0;
+}
+
+.stat-card .stat-label {
+    font-size: 14px;
+    color: #666;
+    text-transform: uppercase;
+}
+
+/* RapiDoc Customization */
+rapi-doc {
+    display: block;
+    width: 100%;
+}
+
+rapi-doc::part(section-navbar) {
+    border-right: 1px solid #e0e0e0;
+}
+
+rapi-doc::part(section-main-content) {
+    padding: 20px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .dashboard-icon-widget .widget-details h1 {
+        font-size: 24px;
+    }
+
+    .dashboard-icon-widget .widget-icon {
+        font-size: 36px;
+        padding: 15px;
+    }
+
+    .dashboard-icon-widget .widget-details {
+        margin-left: 66px;
+    }
+
+    .quick-actions-card .btn {
+        width: 100%;
+        margin-right: 0;
+    }
+}
+
+/* Loading Spinner */
+.api-loading {
+    text-align: center;
+    padding: 40px;
+}
+
+.api-loading .spinner-border {
+    width: 3rem;
+    height: 3rem;
+}
+
+/* Copy Button Animation */
+.copy-btn-success {
+    animation: copySuccess 0.5s ease-in-out;
+}
+
+@keyframes copySuccess {
+    0% {
+        background-color: #28a745;
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        background-color: #28a745;
+        transform: scale(1);
+    }
+}
+
+/* API Key Form */
+.api-key-form-section {
+    border-top: 1px solid #dee2e6;
+    padding-top: 20px;
+    margin-top: 20px;
+}
+
+.api-key-form-section:first-child {
+    border-top: none;
+    padding-top: 0;
+    margin-top: 0;
+}
+
+/* Endpoint Toggle */
+.endpoint-toggle {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+.endpoint-toggle:hover {
+    background-color: #f8f9fa;
+}
+
+.endpoint-toggle label {
+    margin-bottom: 0;
+    margin-left: 10px;
+    cursor: pointer;
+    flex-grow: 1;
+}
+
+/* Rate Limit Indicator */
+.rate-limit-indicator {
+    display: inline-block;
+    padding: 2px 8px;
+    background: #e9ecef;
+    border-radius: 3px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #495057;
+}
+
+.rate-limit-indicator.warning {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.rate-limit-indicator.danger {
+    background: #f8d7da;
+    color: #721c24;
+}
+
