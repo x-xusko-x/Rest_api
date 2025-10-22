@@ -3,6 +3,7 @@
 **Version:** 0.1.6 - Beta 2  
 **API Version:** 1.0.0  
 **Status:** BETA - Production use at your own risk
+
 ---
 
 ## Beta Notice
@@ -31,18 +32,21 @@ This plugin is currently in **Beta** status. While functional, it may contain bu
 ## Installation
 
 1. **Copy Plugin Files**
+
    ```bash
    # Copy the Rest_api folder to your Rise CRM plugins directory
    cp -r Rest_api /path/to/rise_crm/plugins/
    ```
 
 2. **Run Database Installation**
+
    - Navigate to **Settings → Plugins** in your Rise CRM admin panel
    - Locate "REST API" plugin
    - Click "Install" button
    - The installer will automatically create required database tables
 
 3. **Configure API Settings**
+
    - Go to **Settings → REST API Settings**
    - Enable the API
    - Configure default rate limits
@@ -61,30 +65,31 @@ This plugin is currently in **Beta** status. While functional, it may contain bu
 All endpoints are prefixed with `/api/v1/` and require authentication via API Key and Secret.
 
 ### Base URL
+
 ```
 https://your-domain.com/api/v1/
 ```
 
 ### Available Resources
 
-| Resource | Endpoints | Methods | Special Actions |
-|----------|-----------|---------|-----------------|
-| **Users** | `/users`, `/users/{id}` | GET, POST, PUT, DELETE | - |
-| **Projects** | `/projects`, `/projects/{id}` | GET, POST, PUT, DELETE | - |
-| **Tasks** | `/tasks`, `/tasks/{id}` | GET, POST, PUT, DELETE | - |
-| **Clients** | `/clients`, `/clients/{id}` | GET, POST, PUT, DELETE | Convert lead: `POST /clients/{id}/convert` |
-| **Invoices** | `/invoices`, `/invoices/{id}` | GET, POST, PUT, DELETE | - |
-| **Estimates** | `/estimates`, `/estimates/{id}` | GET, POST, PUT, DELETE | - |
-| **Proposals** | `/proposals`, `/proposals/{id}` | GET, POST, PUT, DELETE | - |
-| **Contracts** | `/contracts`, `/contracts/{id}` | GET, POST, PUT, DELETE | - |
-| **Expenses** | `/expenses`, `/expenses/{id}` | GET, POST, PUT, DELETE | - |
-| **Tickets** | `/tickets`, `/tickets/{id}` | GET, POST, PUT, DELETE | - |
-| **Timesheets** | `/timesheets`, `/timesheets/{id}` | GET, POST, PUT, DELETE | - |
-| **Events** | `/events`, `/events/{id}` | GET, POST, PUT, DELETE | - |
-| **Notes** | `/notes`, `/notes/{id}` | GET, POST, PUT, DELETE | - |
-| **Messages** | `/messages`, `/messages/{id}` | GET, POST, DELETE | No update support |
-| **Notifications** | `/notifications`, `/notifications/{id}` | GET | Mark read: `POST /notifications/{id}/mark_read` |
-| **Announcements** | `/announcements`, `/announcements/{id}` | GET, POST, PUT, DELETE | - |
+| Resource          | Endpoints                               | Methods                | Special Actions                                 |
+| ----------------- | --------------------------------------- | ---------------------- | ----------------------------------------------- |
+| **Users**         | `/users`, `/users/{id}`                 | GET, POST, PUT, DELETE | -                                               |
+| **Projects**      | `/projects`, `/projects/{id}`           | GET, POST, PUT, DELETE | -                                               |
+| **Tasks**         | `/tasks`, `/tasks/{id}`                 | GET, POST, PUT, DELETE | -                                               |
+| **Clients**       | `/clients`, `/clients/{id}`             | GET, POST, PUT, DELETE | Convert lead: `POST /clients/{id}/convert`      |
+| **Invoices**      | `/invoices`, `/invoices/{id}`           | GET, POST, PUT, DELETE | -                                               |
+| **Estimates**     | `/estimates`, `/estimates/{id}`         | GET, POST, PUT, DELETE | -                                               |
+| **Proposals**     | `/proposals`, `/proposals/{id}`         | GET, POST, PUT, DELETE | -                                               |
+| **Contracts**     | `/contracts`, `/contracts/{id}`         | GET, POST, PUT, DELETE | -                                               |
+| **Expenses**      | `/expenses`, `/expenses/{id}`           | GET, POST, PUT, DELETE | -                                               |
+| **Tickets**       | `/tickets`, `/tickets/{id}`             | GET, POST, PUT, DELETE | -                                               |
+| **Timesheets**    | `/timesheets`, `/timesheets/{id}`       | GET, POST, PUT, DELETE | -                                               |
+| **Events**        | `/events`, `/events/{id}`               | GET, POST, PUT, DELETE | -                                               |
+| **Notes**         | `/notes`, `/notes/{id}`                 | GET, POST, PUT, DELETE | -                                               |
+| **Messages**      | `/messages`, `/messages/{id}`           | GET, POST, DELETE      | No update support                               |
+| **Notifications** | `/notifications`, `/notifications/{id}` | GET                    | Mark read: `POST /notifications/{id}/mark_read` |
+| **Announcements** | `/announcements`, `/announcements/{id}` | GET, POST, PUT, DELETE | -                                               |
 
 ### Obtaining API Credentials
 
@@ -160,15 +165,18 @@ Contributions are welcome! This is a **Beta** plugin and needs community input.
 ### Ways to Contribute
 
 1. **Report Bugs**
+
    - Open an issue with detailed reproduction steps
    - Include API request/response examples
    - Check logs in `writable/logs/` for errors
 
 2. **Feature Requests**
+
    - Suggest new endpoints or features
    - Describe use cases and benefits
 
 3. **Code Contributions**
+
    - Fork the repository
    - Create feature branch (`feature/your-feature-name`)
    - Follow existing code style and structure
@@ -188,18 +196,30 @@ Contributions are welcome! This is a **Beta** plugin and needs community input.
 - Add comments for complex logic
 - Update changelog for modifications
 
-
 **Issues:** Report via GitHub Issues
 
 ---
 
-## 📄 License
+## Screenshots
 
-This plugin is part of Rise CRM ecosystem. Please refer to Rise CRM license terms.
+![Rest API Plugin - Dashboard](./screenshots/rest_api_dashboard.png)
 
----
+![Rest API Plugin - Api Keys](./screenshots/rest_api_api_keys.png)
+![Rest API Plugin - Api Key Details](./screenshots/rest_api_api_key_details.png)
+![Rest API Plugin - Create Api Key](./screenshots/rest_api_create_new_api.png)
+
+![Rest API Plugin - Api Logs](./screenshots/rest_api_api_logs.png)
+
+![Rest API Plugin - General Settings](./screenshots/rest_api_general_settings.png)
+
+![Rest API Plugin - Permission Groups](./screenshots/rest_api_permission_groups.png)
+![Rest API Plugin - Permission Group Details](./screenshots/rest_api_permission_group_details.png)
+![Rest API Plugin - Create Permission Group](./screenshots/rest_api_create_new_permission_group.png)
+
+### BROKEN
+
+![Rest API Plugin - Docas/Swagger](./screenshots/rest_api_docs_broken.png)
 
 **Made with ❤️ for Rise CRM**
 
-*Last Updated: October 2025*
-
+_Last Updated: October 2025_
