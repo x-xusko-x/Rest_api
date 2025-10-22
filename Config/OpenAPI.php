@@ -10,16 +10,16 @@ use OpenApi\Attributes as OA;
  * This class defines the root OpenAPI specification metadata
  */
 #[OA\Info(
-    version: "1.0.0",
-    title: "Rise CRM REST API",
-    description: "Comprehensive REST API for Rise CRM with full CRUD operations on all major resources",
+    version: "0.1.6 - Beta 2",
+    title: "Rise CRM - REST API",
+    description: "REST API for Rise CRM",
     contact: new OA\Contact(
         name: "API Support",
-        email: "api@risecrm.com"
+        email: "no@email.com"
     ),
     license: new OA\License(
-        name: "Rise CRM License",
-        url: "https://codecanyon.net/licenses/standard"
+        name: "???????",
+        url: "???????"
     )
 )]
 #[OA\Server(
