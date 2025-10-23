@@ -17,14 +17,14 @@ licensed under the same GNU Affero General Public License v3.0 (AGPL-3.0).
 
    * When developing **minor or patch versions**, the Licensee does **not need to publish** the code.
 
-     * Example:
-       `1.0.0 → 1.0.1` → ❌ *No publishing required*
+     * Example:\
+       `1.0.0 → 1.0.1` → ❌ *No publishing required*\
        `1.0.0 → 1.1.0` → ❌ *No publishing required*
    * When developing a **new major version**, the Licensee must **publish all previous major versions** up to, but not including, the newly developed one.
 
-     * Example:
-       `1.0.0 → 2.0.0` → ✅ *Publish all code up to version 1.x.x*
-       `2.0.0 → 3.0.0` → ✅ *Publish all code up to version 2.x.x*
+     * Example:\
+       `1.0.0 → 2.0.0` → ✅ *Publish all code up to version 1.x.x*\
+       `2.0.0 → 3.0.0` → ✅ *Publish all code up to version 2.x.x*\
        `3.0.0 → 3.0.1` → ❌ *No publishing required*
 4. This ensures that:
 
