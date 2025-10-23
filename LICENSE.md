@@ -1,3 +1,39 @@
+This project is licensed under the **GNU Affero General Public License v3.0 (AGPL-3.0)**, which ensures that all modifications and derivative works remain open source and publicly available when deployed on a network.
+
+However, there is one **special exception** granted to a specific developer and their organization.
+
+---
+
+## Special Exception — FaorSketch License Grant
+
+Notwithstanding the standard AGPL-3.0 terms, the following **additional permission** applies:
+
+The GitHub user [**FaorSketch**](https://github.com/fairsketch), along with his company and/or direct associates (hereafter referred to as *the Licensee*), is granted the right to use this software for **commercial purposes**, under the following conditions:
+
+1. The Licensee must maintain a public GitHub repository containing the source code of all previously released versions of their modified software,
+licensed under the same GNU Affero General Public License v3.0 (AGPL-3.0).
+2. The Licensee is only required to **publish previous versions**, while their **current major version** may remain private.
+3. Specifically:
+
+   * When developing **minor or patch versions**, the Licensee does **not need to publish** the code.
+
+     * Example:
+       `1.0.0 → 1.0.1` → ❌ *No publishing required*
+       `1.0.0 → 1.1.0` → ❌ *No publishing required*
+   * When developing a **new major version**, the Licensee must **publish all previous major versions** up to, but not including, the newly developed one.
+
+     * Example:
+       `1.0.0 → 2.0.0` → ✅ *Publish all code up to version 1.x.x*
+       `2.0.0 → 3.0.0` → ✅ *Publish all code up to version 2.x.x*
+       `3.0.0 → 3.0.1` → ❌ *No publishing required*
+4. This ensures that:
+
+   * The Licensee always retains one major version of private development leverage.
+   * The open-source community continues to receive periodic, publicly available releases.
+5. All other users and entities remain fully bound by the standard AGPL-3.0 license.
+
+---
+
 # GNU AFFERO GENERAL PUBLIC LICENSE
 
 ### Version 3, 19 November 2007
