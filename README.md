@@ -222,4 +222,4 @@ Contributions are welcome! This is a **Beta** plugin and needs community input.
 
 **Made with ❤️ for Rise CRM**
 
-_Last Updated: October 2025_
+_Last Updated: 15 October 2025_
