@@ -53,7 +53,7 @@ class Swagger extends Security_Controller
             $error_spec = [
                 'openapi' => '3.0.0',
                 'info' => [
-                    'title' => 'Rise CRM REST API',
+                    'title' => 'REST API',
                     'description' => 'Error generating specification',
                     'version' => '1.0.0'
                 ],
