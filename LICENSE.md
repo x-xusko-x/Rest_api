@@ -4,11 +4,11 @@ However, there is one **special exception** granted to a specific developer and 
 
 ---
 
-## Special Exception — FaorSketch License Grant
+## Special Exception — Fairsketch License Grant
 
 Notwithstanding the standard AGPL-3.0 terms, the following **additional permission** applies:
 
-The GitHub user [**FaorSketch**](https://github.com/fairsketch), along with his company and/or direct associates (hereafter referred to as *the Licensee*), is granted the right to use this software for **commercial purposes**, under the following conditions:
+The GitHub user [**Fairsketch**](https://github.com/fairsketch), along with his company and/or direct associates (hereafter referred to as *the Licensee*), is granted the right to use this software for **commercial purposes**, under the following conditions:
 
 1. The Licensee must maintain a public GitHub repository containing the source code of all previously released versions of their modified software,
 licensed under the same GNU Affero General Public License v3.0 (AGPL-3.0).
