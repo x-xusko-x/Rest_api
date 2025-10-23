@@ -61,12 +61,23 @@ class Api_keys_model extends Crud_model {
     }
 
     /**
-     * Hash the API secret
+     * Hash the API secret using Argon2ID (or bcrypt fallback)
+     * 
+     * Argon2ID is preferred as it doesn't truncate at 72 bytes like bcrypt,
+     * allowing full utilization of the 128-character secret's entropy.
      * 
      * @param string $secret
      * @return string Hashed secret
      */
     function hash_secret($secret) {
-        return password_hash($secret, PASSWORD_BCRYPT);
+        // Use Argon2ID if available (PHP 7.2+), otherwise fallback to bcrypt
+        if (defined('PASSWORD_ARGON2ID')) {
+            return password_hash($secret, PASSWORD_ARGON2ID);
+        }
+        
+        // Fallback: Hash the secret with SHA-256 first to ensure full entropy is used,
+        // then pass the first 72 bytes to bcrypt
+        $hashed = hash('sha256', $secret, true); // Binary output
+        return password_hash(base64_encode($hashed), PASSWORD_BCRYPT);
     }
 }

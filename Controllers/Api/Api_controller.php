@@ -65,7 +65,17 @@ class Api_controller extends App_Controller {
             ], 503);
         }
         
-        // Authenticate first (we need api_key_info for per-key settings)
+        // Set CORS headers BEFORE authentication (required for preflight)
+        $this->_set_cors_headers();
+        
+        // Handle OPTIONS preflight requests early (before authentication)
+        if ($this->request_method === 'OPTIONS') {
+            $this->response->setStatusCode(200);
+            $this->response->send();
+            exit;
+        }
+        
+        // Authenticate (we need api_key_info for per-key settings)
         $this->_authenticate();
         
         // Load permission group if assigned
@@ -85,9 +95,6 @@ class Api_controller extends App_Controller {
         
         // Check rate limits
         $this->_check_rate_limit();
-        
-        // Set CORS headers if enabled
-        $this->_set_cors_headers();
         
         // Get request data
         $this->request_data = $this->_get_request_data();
@@ -175,8 +182,22 @@ class Api_controller extends App_Controller {
             }
         }
         
-        // Verify secret
-        if (!password_verify($api_secret, $key_info->secret)) {
+        // Verify secret (supports both Argon2ID and bcrypt with SHA-256 pre-hash)
+        $secret_valid = false;
+        
+        // Try direct verification first (works for Argon2ID and standard bcrypt)
+        if (password_verify($api_secret, $key_info->secret)) {
+            $secret_valid = true;
+        } 
+        // Fallback: Try SHA-256 pre-hash for bcrypt (for keys hashed with fallback method)
+        else if (!defined('PASSWORD_ARGON2ID')) {
+            $hashed = hash('sha256', $api_secret, true);
+            if (password_verify(base64_encode($hashed), $key_info->secret)) {
+                $secret_valid = true;
+            }
+        }
+        
+        if (!$secret_valid) {
             $this->_log_request($key_info->id, 401, 'Invalid API secret');
             $this->_api_response([
                 'success' => false,
@@ -370,7 +391,14 @@ class Api_controller extends App_Controller {
      */
     private function _set_cors_headers() {
         // Check if CORS is enabled (per-key overrides global)
-        $cors_enabled = $this->_get_effective_setting('cors_enabled');
+        // Note: For preflight requests, we check global settings since API key is not authenticated yet
+        $cors_enabled = false;
+        if ($this->api_key_info) {
+            $cors_enabled = $this->_get_effective_setting('cors_enabled');
+        } else {
+            $cors_enabled = $this->Api_settings_model->get_setting('cors_enabled') == '1';
+        }
+        
         if (!$cors_enabled) {
             return;
         }
@@ -393,11 +421,6 @@ class Api_controller extends App_Controller {
                 $this->response->setHeader('Access-Control-Allow-Headers', 'Content-Type, X-API-Key, X-API-Secret, Authorization');
                 $this->response->setHeader('Access-Control-Max-Age', '3600');
             }
-        }
-        
-        // Handle preflight requests
-        if ($this->request_method === 'OPTIONS') {
-            $this->_api_response(['success' => true], 200);
         }
     }
 
@@ -473,27 +496,52 @@ class Api_controller extends App_Controller {
     }
 
     /**
-     * Log API request
+     * Log API request with body truncation
      */
     private function _log_request($api_key_id, $status_code, $response_data = null, $response_time = null) {
         try {
-            // Prepare request body (sanitize sensitive data)
-            $request_body = $this->request_data;
-            if (is_array($request_body) && isset($request_body['password'])) {
-                $request_body['password'] = '***HIDDEN***'; // Don't log passwords
-            }
-            if (is_array($request_body) && isset($request_body['api_secret'])) {
-                $request_body['api_secret'] = '***HIDDEN***'; // Don't log secrets
-            }
-            
-            // Prepare response body (full response for detailed logs)
-            $response_body = $response_data;
-            if (is_string($response_data)) {
-                // Legacy: if string passed, use as-is
+            // Check if body logging is enabled
+            $log_bodies_enabled = $this->Api_settings_model->get_setting('log_bodies_enabled');
+            if ($log_bodies_enabled === '0') {
+                // Skip body logging entirely
+                $request_body_str = '[Body logging disabled]';
+                $response_body_str = '[Body logging disabled]';
+            } else {
+                // Get max body size setting (default 10KB)
+                $max_body_size = (int)($this->Api_settings_model->get_setting('log_max_body_size') ?: 10240);
+                
+                // Prepare request body (sanitize sensitive data)
+                $request_body = $this->request_data;
+                if (is_array($request_body) && isset($request_body['password'])) {
+                    $request_body['password'] = '***HIDDEN***'; // Don't log passwords
+                }
+                if (is_array($request_body) && isset($request_body['api_secret'])) {
+                    $request_body['api_secret'] = '***HIDDEN***'; // Don't log secrets
+                }
+                
+                $request_body_str = json_encode($request_body);
+                
+                // Truncate request body if too large
+                if (strlen($request_body_str) > $max_body_size) {
+                    $request_body_str = substr($request_body_str, 0, $max_body_size) . '... [TRUNCATED - Original size: ' . strlen($request_body_str) . ' bytes]';
+                }
+                
+                // Prepare response body (full response for detailed logs)
                 $response_body = $response_data;
-            } else if (is_array($response_data)) {
-                // New: if array passed, it's the full response - encode it
-                $response_body = json_encode($response_data);
+                if (is_string($response_data)) {
+                    // Legacy: if string passed, use as-is
+                    $response_body_str = $response_data;
+                } else if (is_array($response_data)) {
+                    // New: if array passed, it's the full response - encode it
+                    $response_body_str = json_encode($response_data);
+                } else {
+                    $response_body_str = '';
+                }
+                
+                // Truncate response body if too large
+                if (strlen($response_body_str) > $max_body_size) {
+                    $response_body_str = substr($response_body_str, 0, $max_body_size) . '... [TRUNCATED - Original size: ' . strlen($response_body_str) . ' bytes]';
+                }
             }
             
             $log_data = array(
@@ -502,9 +550,9 @@ class Api_controller extends App_Controller {
                 'method' => $this->request_method,
                 'ip_address' => $this->request->getIPAddress(),
                 'user_agent' => $this->request->getUserAgent(),
-                'request_body' => json_encode($request_body),
+                'request_body' => $request_body_str,
                 'response_code' => $status_code,
-                'response_body' => $response_body,
+                'response_body' => $response_body_str,
                 'response_time' => $response_time ?? round((microtime(true) - $this->start_time) * 1000, 2),
                 'created_at' => get_current_utc_time()
             );

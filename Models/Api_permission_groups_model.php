@@ -100,11 +100,11 @@ class Api_permission_groups_model extends Crud_model {
             ),
             'messages' => array(
                 'name' => 'Messages',
-                'operations' => array('create', 'read', 'update', 'delete')
+                'operations' => array('create', 'read', 'delete')
             ),
             'notifications' => array(
                 'name' => 'Notifications',
-                'operations' => array('create', 'read', 'update', 'delete')
+                'operations' => array('read')
             ),
             'announcements' => array(
                 'name' => 'Announcements',

@@ -113,23 +113,11 @@ class Messages extends Api_controller
         try {
             $data = $this->request->getJSON(true);
 
-            // Validate required fields
-            $required_fields = array('subject', 'message', 'to_user_id');
-            $validation_errors = [];
-
-            foreach ($required_fields as $field) {
-                if (empty($data[$field])) {
-                    $validation_errors[$field] = ucfirst(str_replace('_', ' ', $field)) . ' is required';
-                }
-            }
-
-            if (!empty($validation_errors)) {
-                $this->_api_response(array(
-                    'message' => 'Validation failed',
-                    'errors' => $validation_errors
-                ), 400);
-                return;
-            }
+            // Validate using schema (standardized approach)
+            $this->_validate_request_schema('Message', 'Create');
+            
+            // Fallback validation for required fields
+            $this->_validate_required_fields(['subject', 'message', 'to_user_id']);
 
             // Validate to_user exists
             $to_user = $this->Users_model->get_one($data['to_user_id']);

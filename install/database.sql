@@ -95,7 +95,10 @@ INSERT IGNORE INTO `api_settings` (`setting_name`, `setting_value`, `type`, `del
 ('require_https', '0', 'app', 0),
 ('cors_enabled', '0', 'app', 0),
 ('cors_allowed_origins', '', 'app', 0),
-('default_ip_whitelist', '', 'app', 0);
+('default_ip_whitelist', '', 'app', 0),
+('log_max_body_size', '10240', 'app', 0),
+('log_bodies_enabled', '1', 'app', 0),
+('log_bodies_sample_rate', '100', 'app', 0);
 
 --#
 
@@ -138,4 +141,4 @@ CREATE TABLE IF NOT EXISTS `api_permission_groups` (
 
 -- Insert default "Default All" permission group
 INSERT IGNORE INTO `api_permission_groups` (`name`, `description`, `is_system`, `permissions`, `created_at`, `deleted`) VALUES
-('Default All', 'System default group with full access to all endpoints and operations', 1, '{"users":{"create":true,"read":true,"update":true,"delete":true},"projects":{"create":true,"read":true,"update":true,"delete":true},"tasks":{"create":true,"read":true,"update":true,"delete":true},"clients":{"create":true,"read":true,"update":true,"delete":true},"invoices":{"create":true,"read":true,"update":true,"delete":true},"estimates":{"create":true,"read":true,"update":true,"delete":true},"proposals":{"create":true,"read":true,"update":true,"delete":true},"contracts":{"create":true,"read":true,"update":true,"delete":true},"expenses":{"create":true,"read":true,"update":true,"delete":true},"tickets":{"create":true,"read":true,"update":true,"delete":true},"timesheets":{"create":true,"read":true,"update":true,"delete":true},"events":{"create":true,"read":true,"update":true,"delete":true},"notes":{"create":true,"read":true,"update":true,"delete":true},"messages":{"create":true,"read":true,"update":true,"delete":true},"notifications":{"create":true,"read":true,"update":true,"delete":true},"announcements":{"create":true,"read":true,"update":true,"delete":true}}', NOW(), 0);
+('Default All', 'System default group with full access to all endpoints and operations', 1, '{"users":{"create":true,"read":true,"update":true,"delete":true},"projects":{"create":true,"read":true,"update":true,"delete":true},"tasks":{"create":true,"read":true,"update":true,"delete":true},"clients":{"create":true,"read":true,"update":true,"delete":true},"invoices":{"create":true,"read":true,"update":true,"delete":true},"estimates":{"create":true,"read":true,"update":true,"delete":true},"proposals":{"create":true,"read":true,"update":true,"delete":true},"contracts":{"create":true,"read":true,"update":true,"delete":true},"expenses":{"create":true,"read":true,"update":true,"delete":true},"tickets":{"create":true,"read":true,"update":true,"delete":true},"timesheets":{"create":true,"read":true,"update":true,"delete":true},"events":{"create":true,"read":true,"update":true,"delete":true},"notes":{"create":true,"read":true,"update":true,"delete":true},"messages":{"create":true,"read":true,"delete":true},"notifications":{"read":true},"announcements":{"create":true,"read":true,"update":true,"delete":true}}', NOW(), 0);

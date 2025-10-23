@@ -25,18 +25,14 @@ class Notifications extends Api_controller
         try {
             $pagination = $this->_get_pagination_params(50, 100);
             
-            $user_id = $this->request->getGet('user_id');
-            if (!$user_id && $this->authenticated_user_id) {
-                $user_id = $this->authenticated_user_id;
-            }
-            
-            if (!$user_id) {
+            // Security: Always use authenticated user ID, never accept user_id parameter
+            if (!$this->authenticated_user_id) {
                 $this->_api_list_response([], 0, 'notifications', $pagination, false);
                 return;
             }
 
             $notifications_result = $this->Notifications_model->get_notifications(
-                (int)$user_id,
+                (int)$this->authenticated_user_id,
                 $pagination['offset'],
                 $pagination['limit']
             );

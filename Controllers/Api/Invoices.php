@@ -139,23 +139,11 @@ class Invoices extends Api_controller
         try {
             $data = $this->request->getJSON(true);
 
-            // Validate required fields
-            $required_fields = array('client_id', 'bill_date', 'due_date');
-            $validation_errors = [];
-
-            foreach ($required_fields as $field) {
-                if (empty($data[$field])) {
-                    $validation_errors[$field] = ucfirst(str_replace('_', ' ', $field)) . ' is required';
-                }
-            }
-
-            if (!empty($validation_errors)) {
-                $this->_api_response(array(
-                    'message' => 'Validation failed',
-                    'errors' => $validation_errors
-                ), 400);
-                return;
-            }
+            // Validate using schema (standardized approach)
+            $this->_validate_request_schema('Invoice', 'Create');
+            
+            // Fallback validation for required fields
+            $this->_validate_required_fields(['client_id', 'bill_date', 'due_date']);
 
             // Validate client_id
             $client = $this->Clients_model->get_one($data['client_id']);
@@ -281,6 +269,9 @@ class Invoices extends Api_controller
             }
 
             $data = $this->request->getJSON(true);
+            
+            // Validate using schema (standardized approach)
+            $this->_validate_request_schema('Invoice', 'Update');
 
             // Prepare update data
             $invoice_data = array();

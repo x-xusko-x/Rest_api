@@ -114,23 +114,11 @@ class Projects extends Api_controller
         try {
             $data = $this->request->getJSON(true);
 
-            // Validate required fields
-            $required_fields = array('title', 'client_id');
-            $validation_errors = [];
-
-            foreach ($required_fields as $field) {
-                if (empty($data[$field])) {
-                    $validation_errors[$field] = ucfirst(str_replace('_', ' ', $field)) . ' is required';
-                }
-            }
-
-            if (!empty($validation_errors)) {
-                $this->_api_response(array(
-                    'message' => 'Validation failed',
-                    'errors' => $validation_errors
-                ), 400);
-                return;
-            }
+            // Validate using schema (standardized approach)
+            $this->_validate_request_schema('Project', 'Create');
+            
+            // Fallback validation for required fields
+            $this->_validate_required_fields(['title', 'client_id']);
 
             // Validate client exists
             $client = $this->Clients_model->get_one($data['client_id']);
@@ -242,6 +230,9 @@ class Projects extends Api_controller
             }
 
             $data = $this->request->getJSON(true);
+            
+            // Validate using schema (standardized approach)
+            $this->_validate_request_schema('Project', 'Update');
 
             // Prepare update data
             $project_data = array();

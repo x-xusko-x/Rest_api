@@ -57,11 +57,15 @@ class Api_rate_limits_model extends Crud_model {
     }
 
     /**
-     * Check rate limit for an API key
+     * Check rate limit for an API key (optimized with pre-calculated counts)
+     * 
+     * Uses pre-calculated hour_count and day_count from the current minute record
+     * to avoid expensive aggregate queries across all records.
      * 
      * @param int $api_key_id
      * @param int $per_minute_limit
      * @param int $per_hour_limit
+     * @param int $per_day_limit
      * @return array ['allowed' => bool, 'minute_remaining' => int, 'hour_remaining' => int]
      */
     function check_limit($api_key_id, $per_minute_limit, $per_hour_limit, $per_day_limit = 10000) {
@@ -74,27 +78,16 @@ class Api_rate_limits_model extends Crud_model {
         $hour_window = date('Y-m-d H:00:00');
         $day_window = date('Y-m-d 00:00:00');
 
-        // Get minute count from current minute window
+        // Get current minute record with pre-calculated hour and day counts
+        // This is MUCH faster than aggregating across all records
         $minute_record = $this->get_one_where(array(
             'api_key_id' => $api_key_id,
             'minute_window' => $minute_window
         ));
+        
         $minute_count = isset($minute_record->minute_count) ? (int) $minute_record->minute_count : 0;
-
-        // Get hour count - sum ALL minute_counts from current hour
-        $this->db_builder->selectSum('minute_count', 'total');
-        $this->db_builder->select('COALESCE(SUM(minute_count), 0) as total', false);
-        $this->db_builder->where('api_key_id', $api_key_id);
-        $this->db_builder->where('hour_window', $hour_window);
-        $hour_result = $this->db_builder->get()->getRow();
-        $hour_count = (int) ($hour_result->total ?? 0);
-
-        // Get day count - sum ALL minute_counts from current day
-        $this->db_builder->select('COALESCE(SUM(minute_count), 0) as total', false);
-        $this->db_builder->where('api_key_id', $api_key_id);
-        $this->db_builder->where('day_window', $day_window);
-        $day_result = $this->db_builder->get()->getRow();
-        $day_count = (int) ($day_result->total ?? 0);
+        $hour_count = isset($minute_record->hour_count) ? (int) $minute_record->hour_count : 0;
+        $day_count = isset($minute_record->day_count) ? (int) $minute_record->day_count : 0;
 
         $minute_remaining = max(0, $per_minute_limit - $minute_count);
         $hour_remaining = max(0, $per_hour_limit - $hour_count);
@@ -117,8 +110,12 @@ class Api_rate_limits_model extends Crud_model {
     }
 
     /**
-     * Increment rate limit counters
+     * Increment rate limit counters with pre-calculated hour/day counts
      * Uses INSERT ... ON DUPLICATE KEY UPDATE to avoid race conditions
+     * 
+     * This method pre-calculates hour_count and day_count by aggregating
+     * minute_count values, which makes check_limit() much faster (single query
+     * instead of 3 aggregate queries).
      * 
      * Note: This uses raw SQL because CodeIgniter's Query Builder doesn't support 
      * "ON DUPLICATE KEY UPDATE" syntax, which is essential for handling race conditions
@@ -137,16 +134,14 @@ class Api_rate_limits_model extends Crud_model {
 
         $api_rate_limits_table = $this->db->prefixTable('api_rate_limits');
 
-        // Use INSERT ... ON DUPLICATE KEY UPDATE to handle race conditions
-        // If record exists, increment minute_count; if not, insert new with minute_count = 1
-        // Raw SQL is required as Query Builder doesn't support ON DUPLICATE KEY UPDATE
-        $sql = "INSERT INTO $api_rate_limits_table 
-                (api_key_id, minute_window, hour_window, day_window, minute_count, hour_count, day_count, created_at) 
-                VALUES (?, ?, ?, ?, 1, 0, 0, ?)
-                ON DUPLICATE KEY UPDATE 
-                minute_count = minute_count + 1";
-
         try {
+            // Step 1: Increment the current minute counter
+            $sql = "INSERT INTO $api_rate_limits_table 
+                    (api_key_id, minute_window, hour_window, day_window, minute_count, hour_count, day_count, created_at) 
+                    VALUES (?, ?, ?, ?, 1, 0, 0, ?)
+                    ON DUPLICATE KEY UPDATE 
+                    minute_count = minute_count + 1";
+
             $this->db->query($sql, [
                 $api_key_id,
                 $minute_window,
@@ -154,6 +149,41 @@ class Api_rate_limits_model extends Crud_model {
                 $day_window,
                 $created_at
             ]);
+            
+            // Step 2: Pre-calculate hour_count for the current minute record
+            // This aggregates all minute_count values for the current hour
+            $sql_hour = "UPDATE $api_rate_limits_table 
+                        SET hour_count = (
+                            SELECT COALESCE(SUM(minute_count), 0) 
+                            FROM (SELECT minute_count FROM $api_rate_limits_table 
+                                  WHERE api_key_id = ? AND hour_window = ?) AS hour_data
+                        )
+                        WHERE api_key_id = ? AND minute_window = ?";
+            
+            $this->db->query($sql_hour, [
+                $api_key_id,
+                $hour_window,
+                $api_key_id,
+                $minute_window
+            ]);
+            
+            // Step 3: Pre-calculate day_count for the current minute record
+            // This aggregates all minute_count values for the current day
+            $sql_day = "UPDATE $api_rate_limits_table 
+                       SET day_count = (
+                           SELECT COALESCE(SUM(minute_count), 0) 
+                           FROM (SELECT minute_count FROM $api_rate_limits_table 
+                                 WHERE api_key_id = ? AND day_window = ?) AS day_data
+                       )
+                       WHERE api_key_id = ? AND minute_window = ?";
+            
+            $this->db->query($sql_day, [
+                $api_key_id,
+                $day_window,
+                $api_key_id,
+                $minute_window
+            ]);
+            
             return true;
         } catch (\Exception $e) {
             // Log error but don't fail the request
