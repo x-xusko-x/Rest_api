@@ -5,32 +5,15 @@ However, there is one **special exception** granted to a specific developer and 
 ---
 
 ## Special Exception — Fairsketch License Grant
+## Special Exception — Fairsketch License Grant
 
-Notwithstanding the standard AGPL-3.0 terms, the following **additional permission** applies:
+Notwithstanding the terms of the GNU Affero General Public License v3.0 (AGPL-3.0), the following **permanent and unconditional exception** applies:
 
-The GitHub user [**Fairsketch**](https://github.com/fairsketch), along with his company and/or direct associates (hereafter referred to as *the Licensee*), is granted the right to use this software for **commercial purposes**, under the following conditions:
+The GitHub user [**Fairsketch**](https://github.com/fairsketch), including his company and/or direct associates (hereafter referred to as *the Licensee*), is hereby granted **full, unrestricted, and perpetual rights** to use, modify, distribute, sublicense, and/or incorporate this software into any project, whether **commercial or non-commercial**, **open-source or proprietary**, **without any obligation** to publish source code or derivative works.
 
-1. The Licensee must maintain a public GitHub repository containing the source code of all previously released versions of their modified software,
-licensed under the same GNU Affero General Public License v3.0 (AGPL-3.0).
-2. The Licensee is only required to **publish previous versions**, while their **current major version** may remain private.
-3. Specifically:
+This exception removes **all limitations, conditions, or requirements** imposed by the AGPL-3.0 license with respect to the Licensee’s use of this software.
 
-   * When developing **minor or patch versions**, the Licensee does **not need to publish** the code.
-
-     * Example:\
-       `1.0.0 → 1.0.1` → ❌ *No publishing required*\
-       `1.0.0 → 1.1.0` → ❌ *No publishing required*
-   * When developing a **new major version**, the Licensee must **publish all previous major versions** up to, but not including, the newly developed one.
-
-     * Example:\
-       `1.0.0 → 2.0.0` → ✅ *Publish all code up to version 1.x.x*\
-       `2.0.0 → 3.0.0` → ✅ *Publish all code up to version 2.x.x*\
-       `3.0.0 → 3.0.1` → ❌ *No publishing required*
-4. This ensures that:
-
-   * The Licensee always retains one major version of private development leverage.
-   * The open-source community continues to receive periodic, publicly available releases.
-5. All other users and entities remain fully bound by the standard AGPL-3.0 license.
+All other users and entities remain fully bound by the standard AGPL-3.0 license.
 
 ---
 
