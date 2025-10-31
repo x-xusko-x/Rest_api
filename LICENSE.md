@@ -5,7 +5,6 @@ However, there is one **special exception** granted to a specific developer and 
 ---
 
 ## Special Exception — Fairsketch License Grant
-## Special Exception — Fairsketch License Grant
 
 Notwithstanding the terms of the GNU Affero General Public License v3.0 (AGPL-3.0), the following **permanent and unconditional exception** applies:
 
