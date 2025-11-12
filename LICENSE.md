@@ -1,20 +1,6 @@
 This project is licensed under the **GNU Affero General Public License v3.0 (AGPL-3.0)**, which ensures that all modifications and derivative works remain open source and publicly available when deployed on a network.
 
-However, there is one **special exception** granted to a specific developer and their organization.
-
----
-
-## Special Exception — Fairsketch License Grant
-
-Notwithstanding the terms of the GNU Affero General Public License v3.0 (AGPL-3.0), the following **permanent and unconditional exception** applies:
-
-The GitHub user [**Fairsketch**](https://github.com/fairsketch), including his company and/or direct associates (hereafter referred to as *the Licensee*), is hereby granted **full, unrestricted, and perpetual rights** to use, modify, distribute, sublicense, and/or incorporate this software into any project, whether **commercial or non-commercial**, **open-source or proprietary**, **without any obligation** to publish source code or derivative works.
-
-This exception removes **all limitations, conditions, or requirements** imposed by the AGPL-3.0 license with respect to the Licensee’s use of this software.
-
-All other users and entities remain fully bound by the standard AGPL-3.0 license.
-
----
+----
 
 # GNU AFFERO GENERAL PUBLIC LICENSE
 
