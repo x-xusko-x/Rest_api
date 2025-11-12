@@ -1,7 +1,3 @@
-This project is licensed under the **GNU Affero General Public License v3.0 (AGPL-3.0)**, which ensures that all modifications and derivative works remain open source and publicly available when deployed on a network.
-
-----
-
 # GNU AFFERO GENERAL PUBLIC LICENSE
 
 ### Version 3, 19 November 2007
